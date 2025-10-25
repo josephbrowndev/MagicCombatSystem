@@ -154,6 +154,19 @@ struct FSpellData
 		, CastTime(1.0f)
 		, RequiredMastery(0)
 	{}
+
+	// Equality operator for array operations
+	bool operator==(const FSpellData& Other) const
+	{
+		return SpellName == Other.SpellName &&
+			   Element == Other.Element &&
+			   CombinedElement == Other.CombinedElement;
+	}
+
+	bool operator!=(const FSpellData& Other) const
+	{
+		return !(*this == Other);
+	}
 };
 
 /**
@@ -178,4 +191,57 @@ struct FMasteryData
 		, Experience(0.0f)
 		, ExperienceToNextLevel(100.0f)
 	{}
+};
+
+/**
+ * Structure for weapon attack data
+ */
+USTRUCT(BlueprintType)
+struct FWeaponAttackData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName AttackName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EWeaponStyle WeaponStyle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float StaminaCost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float BaseDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackSpeed; // Time between attacks
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ComboIndex; // For combo chains
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 RequiredMastery;
+
+	FWeaponAttackData()
+		: AttackName(NAME_None)
+		, WeaponStyle(EWeaponStyle::None)
+		, StaminaCost(15.0f)
+		, BaseDamage(30.0f)
+		, AttackSpeed(1.0f)
+		, ComboIndex(0)
+		, RequiredMastery(0)
+	{}
+
+	// Equality operator for array operations
+	bool operator==(const FWeaponAttackData& Other) const
+	{
+		return AttackName == Other.AttackName &&
+			   WeaponStyle == Other.WeaponStyle &&
+			   ComboIndex == Other.ComboIndex;
+	}
+
+	bool operator!=(const FWeaponAttackData& Other) const
+	{
+		return !(*this == Other);
+	}
 };
