@@ -299,8 +299,8 @@ void UAIBehaviorComponent::OnCaught(ANinjaWizardCharacter* Player)
 	// Spawn reward item
 	if (ChasingSettings.RewardItemClass)
 	{
-		FVector SpawnLocation = OwnerEntity->GetActorLocation();
-		GetWorld()->SpawnActor<AActor>(ChasingSettings.RewardItemClass, SpawnLocation, FRotator::ZeroRotator);
+		FVector RewardSpawnLocation = OwnerEntity->GetActorLocation();
+		GetWorld()->SpawnActor<AActor>(ChasingSettings.RewardItemClass, RewardSpawnLocation, FRotator::ZeroRotator);
 	}
 
 	OnCaughtByPlayer(Player);
@@ -563,12 +563,12 @@ void UAIBehaviorComponent::SpawnPunishmentMobs(ANinjaWizardCharacter* Player)
 	for (int32 i = 0; i < AreaGuardSettings.PunishmentMobCount; i++)
 	{
 		// Spawn around the player
-		FVector SpawnLocation = Player->GetActorLocation() +
+		FVector PunishmentSpawnLocation = Player->GetActorLocation() +
 			FVector(FMath::RandRange(-300.0f, 300.0f), FMath::RandRange(-300.0f, 300.0f), 0.0f);
 
 		AActor* PunishmentMob = GetWorld()->SpawnActor<AActor>(
 			AreaGuardSettings.PunishmentMobClass,
-			SpawnLocation,
+			PunishmentSpawnLocation,
 			FRotator::ZeroRotator);
 
 		// Make punishment mobs stronger
