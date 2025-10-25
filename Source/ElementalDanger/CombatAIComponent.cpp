@@ -886,12 +886,12 @@ void UCombatAIComponent::DealDamageToTarget(AActor* Target, float Damage)
 
 	if (ACombatEntity* TargetEntity = Cast<ACombatEntity>(Target))
 	{
-		TargetEntity->TakeDamage(Damage, OwnerEntity);
+		TargetEntity->ApplyDamageFrom(Damage, OwnerEntity);
 	}
 	else if (ANinjaWizardCharacter* Player = Cast<ANinjaWizardCharacter>(Target))
 	{
 		// Deal damage to player
-		// Player->TakeDamage(Damage);
+		// Player->ApplyDamageFrom(Damage, OwnerEntity);
 	}
 }
 
