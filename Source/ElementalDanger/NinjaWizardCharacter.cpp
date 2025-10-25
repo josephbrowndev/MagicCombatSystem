@@ -4,7 +4,10 @@
 #include "MagicComponent.h"
 #include "WeaponComponent.h"
 #include "MasteryManagerComponent.h"
+#include "PlayerAttributeComponent.h"
+#include "SummonManagerComponent.h"
 #include "InteractableInterface.h"
+#include "NinjaWizardHUD.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -68,6 +71,8 @@ ANinjaWizardCharacter::ANinjaWizardCharacter()
 	MagicComponent = CreateDefaultSubobject<UMagicComponent>(TEXT("MagicComponent"));
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 	MasteryManager = CreateDefaultSubobject<UMasteryManagerComponent>(TEXT("MasteryManager"));
+	AttributeComponent = CreateDefaultSubobject<UPlayerAttributeComponent>(TEXT("AttributeComponent"));
+	SummonManager = CreateDefaultSubobject<USummonManagerComponent>(TEXT("SummonManager"));
 }
 
 void ANinjaWizardCharacter::BeginPlay()
