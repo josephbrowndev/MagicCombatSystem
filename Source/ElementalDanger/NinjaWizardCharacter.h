@@ -10,6 +10,12 @@
 class UMagicComponent;
 class UWeaponComponent;
 class UMasteryManagerComponent;
+class USpringArmComponent;
+class UCameraComponent;
+class UInputMappingContext;
+class UInputAction;
+struct FInputActionValue;
+class IInteractableInterface;
 
 UCLASS()
 class ELEMENTALDANGER_API ANinjaWizardCharacter : public ACharacter
@@ -51,6 +57,12 @@ public:
 	// ============================================
 	// Components
 	// ============================================
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UCameraComponent* FollowCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UMagicComponent* MagicComponent;
@@ -102,9 +114,77 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bIsCasting;
 
+	// ============================================
+	// Camera & Movement
+	// ============================================
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float MouseSensitivity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	bool bInvertCameraY;
+
+	// ============================================
+	// Enhanced Input
+	// ============================================
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputMappingContext* DefaultMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* JumpAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* InteractAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* CastSpellAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* AttackAction;
+
+	// ============================================
+	// Interaction System
+	// ============================================
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+	float InteractionRange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+	float InteractionCheckFrequency;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
+	AActor* FocusedInteractable;
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	void PerformInteractionCheck();
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	void BeginInteract();
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	AActor* GetFocusedInteractable() const { return FocusedInteractable; }
+
+protected:
+	// Input callbacks
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+	void StartJump();
+	void StopJump();
+	void Interact();
+	void StartCastSpell();
+	void StartAttack();
+
 private:
 	void RegenerateMana(float DeltaTime);
 	void RegenerateStamina(float DeltaTime);
 
 	float CastingTimeRemaining;
+	float InteractionCheckTimer;
 };

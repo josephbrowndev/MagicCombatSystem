@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "MagicTypes.h"
+#include "InteractableInterface.h"
 #include "MentorBase.generated.h"
 
 class ANinjaWizardCharacter;
@@ -67,7 +68,7 @@ struct FMentorQuest
 };
 
 UCLASS()
-class ELEMENTALDANGER_API AMentorBase : public AActor
+class ELEMENTALDANGER_API AMentorBase : public AActor, public IInteractableInterface
 {
 	GENERATED_BODY()
 
@@ -79,6 +80,16 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+
+	// ============================================
+	// IInteractableInterface Implementation
+	// ============================================
+
+	virtual void Interact_Implementation(ANinjaWizardCharacter* Player) override;
+	virtual FText GetInteractionText_Implementation() const override;
+	virtual bool CanInteract_Implementation(ANinjaWizardCharacter* Player) const override;
+	virtual void OnInteractionFocus_Implementation() override;
+	virtual void OnInteractionUnfocus_Implementation() override;
 
 	// ============================================
 	// Mentor Properties
