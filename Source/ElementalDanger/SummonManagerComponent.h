@@ -129,7 +129,7 @@ public:
 	TArray<FStoredSummon> GetSummonsByRank(EEntityRank Rank) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Summons")
-	FStoredSummon* FindStoredSummon(FName SummonName);
+	bool FindStoredSummon(FName SummonName, FStoredSummon& OutSummon) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Summons")
 	void UpdateSummonData(ACombatEntity* Summon);
