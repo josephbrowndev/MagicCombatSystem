@@ -172,9 +172,6 @@ void UPlayerAttributeComponent::CalculateStrengthDerivedStats()
 	// Max Health: +10 per STR point
 	DerivedStats.MaxHealthBonus = STR * 10.0f;
 
-	// Carry Weight: +5 per STR point
-	DerivedStats.CarryWeightBonus = STR * 5.0f;
-
 	// Knockback Resistance: +1% per STR point, max 75%
 	DerivedStats.KnockbackResistance = FMath::Min(STR * 1.0f, 75.0f);
 }
@@ -189,11 +186,11 @@ void UPlayerAttributeComponent::CalculateWisdomDerivedStats()
 	// Spell Size: +2% per WIS point
 	DerivedStats.SpellSizeMultiplier = 1.0f + (WIS * 0.02f);
 
-	// Max Summon Count: 1 + (WIS / 15), max 10
-	DerivedStats.MaxSummonCount = FMath::Min(1 + (WIS / 15), 10);
+	// Max Summon Count: WIS * 2 (10x increase for massive armies)
+	DerivedStats.MaxSummonCount = WIS * 2;
 
-	// Summon Capacity: WIS / 10, min 1
-	DerivedStats.SummonCapacity = FMath::Max(WIS / 10, 1);
+	// Summon Capacity: WIS * 10 (10x increase, min 10)
+	DerivedStats.SummonCapacity = FMath::Max(WIS * 10, 10);
 
 	// Max Mana: +8 per WIS point
 	DerivedStats.MaxManaBonus = WIS * 8.0f;

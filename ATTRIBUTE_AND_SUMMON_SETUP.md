@@ -2,6 +2,12 @@
 
 This guide provides step-by-step instructions for implementing the player attribute system (STR, WIS, PER, AGI) and the enemy/ally summon system in Unreal Engine 5 Blueprints.
 
+**Key Features:**
+- **Infinite Inventory**: No carry weight limits - collect unlimited items
+- **Massive Army System**: Command 20-200 summons based on Wisdom (10x standard scaling)
+- **Universal Soul Bonding**: Bond with ANY enemy - from weakest mobs to legendary bosses
+- **Corpse Bonding**: Can bond with enemies you defeat OR find already dead in the world
+
 ## Table of Contents
 1. [Player Attribute Setup](#player-attribute-setup)
 2. [Creating Enemy Blueprints](#creating-enemy-blueprints)
@@ -123,7 +129,7 @@ Create a widget blueprint called `WBP_AttributeDisplay`:
 Canvas Panel
 ├── Attributes Panel
 │   ├── STR: [10] -> Block: 5%, Weapon Dmg: +20%
-│   ├── WIS: [15] -> Magic Dmg: +45%, Summons: 2
+│   ├── WIS: [15] -> Magic Dmg: +45%, Summons: 30/150
 │   ├── PER: [10] -> Crit: 10%, Slow-Mo: 10%
 │   └── AGI: [12] -> Dodge: 9.6%, Move Speed: +18%
 └── Detailed Stats Panel (expandable)
@@ -287,7 +293,15 @@ For each enemy that can be bonded, add challenges to the **Available Challenges*
 
 ## Soul Bonding Implementation
 
-### Step 1: Detect Enemy Death
+**Universal Soul Bonding System:**
+- **ALL enemies can be bonded** - from common mobs to legendary bosses
+- Bond with enemies you defeat in combat
+- Bond with enemies you find already dead in the world (corpses)
+- Each enemy type can only be bonded once (one Fire Elemental, one Lightning Dragon, etc.)
+- No restrictions based on level, rank, or difficulty
+- Build the ultimate collection of allies
+
+### Step 1: Detect Enemy Death or Find Corpse
 
 In BP_NinjaWizardCharacter, create a function called `OnEnemyDefeated`:
 
@@ -652,8 +666,8 @@ Canvas Panel
     │   ├── Value: 15 (+0) x1.0 = 15
     │   ├── Magic Damage: +45%
     │   ├── Spell Size: +30%
-    │   ├── Max Summons: 2
-    │   ├── Summon Capacity: 1
+    │   ├── Max Summons: 30 (15 * 2)
+    │   ├── Summon Capacity: 150 (15 * 10)
     │   └── Max Mana: +120
     ├── Perception Panel
     │   ├── Value: 10 (+0) x1.0 = 10
@@ -683,7 +697,6 @@ Effects per point:
 • Weapon Damage: +2%
 • Max Stamina: +5
 • Max Health: +10
-• Carry Weight: +5
 • Knockback Resist: +1%
 
 Current Total: 10
@@ -803,16 +816,20 @@ On Button Hovered
 
 ### Test 4: Summon Capacity
 
-1. Set player Wisdom to 25 (Capacity = 2, Max Count = 2)
-2. Bond with 2 Common enemies
-3. Summon both enemies
-4. Try to summon a third
-5. Verify rejection message
+1. Set player Wisdom to 10 (Capacity = 100, Max Count = 20)
+2. Bond with multiple Common enemies (each uses 1 capacity)
+3. Summon 20 Common enemies (uses 20 capacity, hits max count)
+4. Try to summon a 21st Common enemy
+5. Verify rejection message (max count reached)
+6. Dismiss all and summon 100 Common enemies
+7. Try to summon more
+8. Verify rejection message (capacity full)
 
 **Expected Results:**
-- Can summon 2 Common summons (2 capacity used)
-- Cannot summon more (capacity full)
-- Message: "Summon capacity full!"
+- Can summon 20 Common summons before hitting max count limit
+- Can summon up to 100 Common summons before hitting capacity limit
+- Cannot summon more when either limit is reached
+- Message: "Max summon count reached!" or "Summon capacity full!"
 
 ### Test 5: Summon Rank Challenges
 
@@ -842,22 +859,22 @@ On Button Hovered
 - Duration: 1.0 + (50 * 0.1) = 6 seconds
 - Time returns to normal after duration
 
-### Test 7: Wisdom-Based Summon Limits
+### Test 7: Wisdom-Based Summon Limits (Massive Army Scale)
 
 **Test Case 1: Low Wisdom (15)**
-- Max Summon Count: 1 + (15/15) = 2
-- Summon Capacity: 15/10 = 1
-- Can summon: 1 Common OR cannot summon Soldier (needs 2 capacity)
+- Max Summon Count: 15 * 2 = 30
+- Summon Capacity: 15 * 10 = 150
+- Can summon: 150 Common OR 75 Soldier OR 50 Captain OR 30 General + extras
 
 **Test Case 2: Medium Wisdom (50)**
-- Max Summon Count: 1 + (50/15) = 4
-- Summon Capacity: 50/10 = 5
-- Can summon: 5 Common OR 2 Soldier + 1 Common OR 1 Captain + 2 Common
+- Max Summon Count: 50 * 2 = 100
+- Summon Capacity: 50 * 10 = 500
+- Can summon: 500 Common OR 250 Soldier OR 125 Captain + 125 Common OR 83 General + 166 Soldier
 
 **Test Case 3: High Wisdom (100)**
-- Max Summon Count: 1 + (100/15) = 7
-- Summon Capacity: 100/10 = 10
-- Can summon: 10 Common OR 5 Soldier OR 2 General + 2 Common
+- Max Summon Count: 100 * 2 = 200
+- Summon Capacity: 100 * 10 = 1000
+- Can summon: 1000 Common OR 500 Soldier OR 250 Captain OR 125 General + 250 Soldier OR 50 Unique bosses
 
 ---
 
@@ -877,13 +894,15 @@ On Button Hovered
 - Max Stamina: +250 (50 * 5)
 - Max Health: +500 (50 * 10)
 - Knockback Resistance: 50% (50 * 1%)
+- Max Summons: 20 (10 * 2)
+- Summon Capacity: 100 (10 * 10)
 
 **Playstyle:**
 - High survivability
 - Strong melee damage
 - Can block often
 - Low magic power
-- Only 1-2 summons
+- Small but effective summon army (20-100 common summons)
 
 ### Example 2: Summoner Build (High Wisdom)
 
@@ -896,22 +915,24 @@ On Button Hovered
 **Derived Stats:**
 - Magic Damage: +225% (75 * 3%)
 - Spell Size: +150% (75 * 2%)
-- Max Summons: 6 (1 + 75/15)
-- Summon Capacity: 7 (75/10)
+- Max Summons: 150 (75 * 2)
+- Summon Capacity: 750 (75 * 10)
 - Max Mana: +600 (75 * 8)
 
 **Possible Summon Combinations:**
-- 7 Common summons
-- 3 Soldier + 1 Common
-- 2 Captain + 1 Common
-- 1 General + 3 Common
-- 1 General + 1 Soldier + 1 Common
+- 750 Common summons (massive army)
+- 375 Soldier summons (elite army)
+- 250 Captain summons (officer corps)
+- 150 General summons (legendary army)
+- Mix: 50 General + 100 Captain + 150 Soldier (balanced elite force)
+- 37 Unique bosses + mixed support
 
 **Playstyle:**
-- Army of summons
-- Powerful magic
+- Command a MASSIVE army of summons
+- Overwhelming force strategy
+- Powerful magic damage
 - Large spell AoE
-- Weak physical defense
+- Weak physical defense but protected by army
 
 ### Example 3: Assassin Build (High Perception + Agility)
 
@@ -951,15 +972,16 @@ On Button Hovered
 **Key Stats:**
 - Block: 10%, Dodge: 16%, Crit: 20%
 - Weapon Damage: +40%, Magic Damage: +60%
-- Max Summons: 2, Capacity: 2
+- Max Summons: 40 (20 * 2), Capacity: 200 (20 * 10)
 - Attack Speed: +40%, Movement: +30%
 - Slow-Motion: 20% chance
 
 **Playstyle:**
 - Jack-of-all-trades
 - Can adapt to situations
-- Moderate in all areas
+- Moderate summon army (40-200 units)
 - Good for learning the game
+- Flexible combat options
 
 ### Example 5: Elite Enemy Configuration
 
@@ -1095,11 +1117,18 @@ Event OnKill
 3. **Reward Ceremony**: Play animation/effect when summon ranks up
 4. **Challenge Variety**: Mix easy and hard challenges for each rank
 
-### Performance:
-1. **Summon Limit**: Hard cap active summons (even with high wisdom) to prevent lag
-2. **Despawn Inactive**: Despawn summons if player gets too far away
-3. **LOD for Summons**: Use simpler models/AI when summons are far from camera
-4. **Pool Summons**: Use object pooling for frequently summoned entities
+### Performance (CRITICAL for Massive Armies):
+1. **Summon LOD System**: Implement aggressive LOD for summons
+   - Close summons (0-10m): Full detail AI and rendering
+   - Medium summons (10-50m): Simplified AI, medium detail
+   - Far summons (50m+): Minimal AI (follow only), low poly models
+2. **Instanced Rendering**: Use instanced static meshes for groups of same-type summons
+3. **AI Budgeting**: Limit full AI updates to nearest 50 summons, use simplified logic for rest
+4. **Culling**: Cull summons beyond 100m, respawn when player gets close
+5. **Pool Summons**: Essential - use object pooling for all summon types
+6. **Group Behavior**: Consider flocking/group AI instead of individual AI for armies >50
+7. **Optional Cap**: Consider optional performance mode capping at 100 active summons
+8. **Async Updates**: Spread summon AI updates across multiple frames
 
 ---
 

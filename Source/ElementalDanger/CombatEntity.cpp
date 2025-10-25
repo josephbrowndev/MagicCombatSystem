@@ -323,7 +323,9 @@ FLinearColor ACombatEntity::GetRankColor() const
 
 bool ACombatEntity::CanBeBonded() const
 {
-	return bIsSummonableAlly && !bIsPlayerSummon;
+	// All enemies can be bonded (alive or dead), as long as they're not already a player summon
+	// This allows bonding with defeated enemies and even corpses found in the world
+	return !bIsPlayerSummon;
 }
 
 // ============================================

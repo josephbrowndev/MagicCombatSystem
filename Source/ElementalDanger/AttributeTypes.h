@@ -94,9 +94,6 @@ struct FDerivedStats
 	float MaxHealthBonus;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Derived Stats|Strength")
-	float CarryWeightBonus;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Derived Stats|Strength")
 	float KnockbackResistance;
 
 	// From Wisdom
@@ -170,12 +167,11 @@ struct FDerivedStats
 		, WeaponDamageMultiplier(1.0f)
 		, MaxStaminaBonus(0.0f)
 		, MaxHealthBonus(0.0f)
-		, CarryWeightBonus(0.0f)
 		, KnockbackResistance(0.0f)
 		, MagicalDamageMultiplier(1.0f)
 		, SpellSizeMultiplier(1.0f)
-		, MaxSummonCount(1)
-		, SummonCapacity(1)
+		, MaxSummonCount(10)
+		, SummonCapacity(10)
 		, MaxManaBonus(0.0f)
 		, ManaRegenBonus(0.0f)
 		, SpellCooldownReduction(0.0f)
