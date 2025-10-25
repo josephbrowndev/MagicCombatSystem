@@ -9,43 +9,6 @@
 
 class ANinjaWizardCharacter;
 
-USTRUCT(BlueprintType)
-struct FWeaponAttackData
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName AttackName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EWeaponStyle WeaponStyle;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float StaminaCost;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float BaseDamage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float AttackSpeed; // Time between attacks
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ComboIndex; // For combo chains
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 RequiredMastery;
-
-	FWeaponAttackData()
-		: AttackName(NAME_None)
-		, WeaponStyle(EWeaponStyle::None)
-		, StaminaCost(15.0f)
-		, BaseDamage(30.0f)
-		, AttackSpeed(1.0f)
-		, ComboIndex(0)
-		, RequiredMastery(0)
-	{}
-};
-
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ELEMENTALDANGER_API UWeaponComponent : public UActorComponent
 {
