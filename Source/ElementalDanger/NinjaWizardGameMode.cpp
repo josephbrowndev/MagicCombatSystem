@@ -2,12 +2,16 @@
 
 #include "NinjaWizardGameMode.h"
 #include "NinjaWizardCharacter.h"
+#include "NinjaWizardHUD.h"
 #include "Kismet/GameplayStatics.h"
 
 ANinjaWizardGameMode::ANinjaWizardGameMode()
 {
 	// Set default pawn class to our ninja wizard character
 	DefaultPawnClass = ANinjaWizardCharacter::StaticClass();
+
+	// Set HUD class
+	HUDClass = ANinjaWizardHUD::StaticClass();
 
 	bIsOpenWorld = false;
 	CurrentLevelNumber = 1;

@@ -5,6 +5,7 @@
 #include "MagicComponent.h"
 #include "WeaponComponent.h"
 #include "MasteryManagerComponent.h"
+#include "NinjaWizardHUD.h"
 
 AMentorBase::AMentorBase()
 {
@@ -28,6 +29,35 @@ void AMentorBase::Tick(float DeltaTime)
 }
 
 // ============================================
+// IInteractableInterface Implementation
+// ============================================
+
+void AMentorBase::Interact_Implementation(ANinjaWizardCharacter* Player)
+{
+	InteractWithPlayer(Player);
+}
+
+FText AMentorBase::GetInteractionText_Implementation() const
+{
+	return FText::Format(FText::FromString("Press E to talk to {0}"), FText::FromName(MentorName));
+}
+
+bool AMentorBase::CanInteract_Implementation(ANinjaWizardCharacter* Player) const
+{
+	return Player != nullptr;
+}
+
+void AMentorBase::OnInteractionFocus_Implementation()
+{
+	// Can be implemented in Blueprint for visual feedback (e.g., highlight)
+}
+
+void AMentorBase::OnInteractionUnfocus_Implementation()
+{
+	// Can be implemented in Blueprint to remove visual feedback
+}
+
+// ============================================
 // Interaction
 // ============================================
 
@@ -36,6 +66,15 @@ void AMentorBase::InteractWithPlayer(ANinjaWizardCharacter* Player)
 	if (!Player)
 	{
 		return;
+	}
+
+	// Show dialogue UI
+	if (APlayerController* PC = Player->GetController<APlayerController>())
+	{
+		if (ANinjaWizardHUD* HUD = PC->GetHUD<ANinjaWizardHUD>())
+		{
+			HUD->ShowDialogue(this, Player);
+		}
 	}
 
 	OnPlayerInteract(Player);
