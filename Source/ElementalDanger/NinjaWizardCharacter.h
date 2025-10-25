@@ -10,6 +10,8 @@
 class UMagicComponent;
 class UWeaponComponent;
 class UMasteryManagerComponent;
+class UPlayerAttributeComponent;
+class USummonManagerComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -72,6 +74,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UMasteryManagerComponent* MasteryManager;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPlayerAttributeComponent* AttributeComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USummonManagerComponent* SummonManager;
 
 	// ============================================
 	// Resource Functions
