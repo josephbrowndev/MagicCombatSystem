@@ -251,16 +251,17 @@ TArray<FStoredSummon> USummonManagerComponent::GetSummonsByRank(EEntityRank Rank
 	return FilteredSummons;
 }
 
-FStoredSummon* USummonManagerComponent::FindStoredSummon(FName SummonName)
+bool USummonManagerComponent::FindStoredSummon(FName SummonName, FStoredSummon& OutSummon) const
 {
-	for (FStoredSummon& Summon : CollectedSummons)
+	for (const FStoredSummon& Summon : CollectedSummons)
 	{
 		if (Summon.SummonName == SummonName)
 		{
-			return &Summon;
+			OutSummon = Summon;
+			return true;
 		}
 	}
-	return nullptr;
+	return false;
 }
 
 void USummonManagerComponent::UpdateSummonData(ACombatEntity* Summon)
@@ -270,15 +271,19 @@ void USummonManagerComponent::UpdateSummonData(ACombatEntity* Summon)
 		return;
 	}
 
-	FStoredSummon* StoredData = FindStoredSummon(Summon->EntityName);
-	if (StoredData)
+	// Find the stored summon data by name and update it
+	for (FStoredSummon& StoredData : CollectedSummons)
 	{
-		// Update stored data with current summon state
-		StoredData->Level = Summon->Level;
-		StoredData->Rank = Summon->Rank;
-		StoredData->ExperiencePoints = Summon->ExperiencePoints;
-		StoredData->KillCount = Summon->KillCount;
-		StoredData->Challenges = Summon->AvailableChallenges;
+		if (StoredData.SummonName == Summon->EntityName)
+		{
+			// Update stored data with current summon state
+			StoredData.Level = Summon->Level;
+			StoredData.Rank = Summon->Rank;
+			StoredData.ExperiencePoints = Summon->ExperiencePoints;
+			StoredData.KillCount = Summon->KillCount;
+			StoredData.Challenges = Summon->AvailableChallenges;
+			break;
+		}
 	}
 }
 
