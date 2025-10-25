@@ -118,7 +118,7 @@ public:
 	// ============================================
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	virtual void TakeDamage(float Damage, AActor* DamageDealer);
+	virtual void ApplyDamageFrom(float Damage, AActor* DamageDealer);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	virtual void DealDamageTo(AActor* Target);

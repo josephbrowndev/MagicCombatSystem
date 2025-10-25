@@ -60,7 +60,7 @@ void ACombatEntity::Tick(float DeltaTime)
 // Combat Functions
 // ============================================
 
-void ACombatEntity::TakeDamage(float Damage, AActor* DamageDealer)
+void ACombatEntity::ApplyDamageFrom(float Damage, AActor* DamageDealer)
 {
 	if (!IsAlive())
 	{
@@ -88,10 +88,10 @@ void ACombatEntity::DealDamageTo(AActor* Target)
 	// Calculate damage with rank multiplier
 	float TotalDamage = BaseDamage * GetRankMultiplier();
 
-	// If target is a combat entity, call its TakeDamage
+	// If target is a combat entity, call its ApplyDamageFrom
 	if (ACombatEntity* TargetEntity = Cast<ACombatEntity>(Target))
 	{
-		TargetEntity->TakeDamage(TotalDamage, this);
+		TargetEntity->ApplyDamageFrom(TotalDamage, this);
 	}
 }
 
