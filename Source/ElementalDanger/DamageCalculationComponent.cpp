@@ -27,32 +27,32 @@ void UDamageCalculationComponent::InitializeElementalOpposites()
 {
 	// Define elemental opposite pairs
 	// Fire <-> Ice (hot vs cold temperature extremes)
-	ElementalOpposites.Add(EMagicType::Fire, EMagicType::Ice);
-	ElementalOpposites.Add(EMagicType::Ice, EMagicType::Fire);
+	ElementalOpposites.Add(EMagicElement::Fire, EMagicElement::Ice);
+	ElementalOpposites.Add(EMagicElement::Ice, EMagicElement::Fire);
 
 	// Water <-> Lightning (water conducts electricity)
-	ElementalOpposites.Add(EMagicType::Water, EMagicType::Lightning);
-	ElementalOpposites.Add(EMagicType::Lightning, EMagicType::Water);
+	ElementalOpposites.Add(EMagicElement::Water, EMagicElement::Lightning);
+	ElementalOpposites.Add(EMagicElement::Lightning, EMagicElement::Water);
 
 	// Earth <-> Air (ground vs sky)
-	ElementalOpposites.Add(EMagicType::Earth, EMagicType::Air);
-	ElementalOpposites.Add(EMagicType::Air, EMagicType::Earth);
+	ElementalOpposites.Add(EMagicElement::Earth, EMagicElement::Air);
+	ElementalOpposites.Add(EMagicElement::Air, EMagicElement::Earth);
 
 	// Light <-> Dark (classic good vs evil, purification vs corruption)
-	ElementalOpposites.Add(EMagicType::Light, EMagicType::Dark);
-	ElementalOpposites.Add(EMagicType::Dark, EMagicType::Light);
+	ElementalOpposites.Add(EMagicElement::Light, EMagicElement::Dark);
+	ElementalOpposites.Add(EMagicElement::Dark, EMagicElement::Light);
 
 	// Poison <-> Light (purification destroys toxins)
-	ElementalOpposites.Add(EMagicType::Poison, EMagicType::Light);
+	ElementalOpposites.Add(EMagicElement::Poison, EMagicElement::Light);
 	// Note: Light already has Dark as opposite, so Poison is weak to Light but Light's main opposite is Dark
 
 	UE_LOG(LogTemp, Log, TEXT("Elemental opposites initialized: %d pairs"), ElementalOpposites.Num());
 }
 
-bool UDamageCalculationComponent::IsElementWeakTo(EMagicType AttackElement, EMagicType DefenderElement) const
+bool UDamageCalculationComponent::IsElementWeakTo(EMagicElement AttackElement, EMagicElement DefenderElement) const
 {
 	// Check if attacker's element is the defender's weakness
-	const EMagicType* OppositeElement = ElementalOpposites.Find(DefenderElement);
+	const EMagicElement* OppositeElement = ElementalOpposites.Find(DefenderElement);
 	if (OppositeElement && *OppositeElement == AttackElement)
 	{
 		return true;
@@ -61,18 +61,18 @@ bool UDamageCalculationComponent::IsElementWeakTo(EMagicType AttackElement, EMag
 	return false;
 }
 
-EMagicType UDamageCalculationComponent::GetOppositeElement(EMagicType Element) const
+EMagicElement UDamageCalculationComponent::GetOppositeElement(EMagicElement Element) const
 {
-	const EMagicType* Opposite = ElementalOpposites.Find(Element);
+	const EMagicElement* Opposite = ElementalOpposites.Find(Element);
 	if (Opposite)
 	{
 		return *Opposite;
 	}
 
-	return EMagicType::Fire; // Default fallback
+	return EMagicElement::Fire; // Default fallback
 }
 
-bool UDamageCalculationComponent::HasOppositeElement(EMagicType Element) const
+bool UDamageCalculationComponent::HasOppositeElement(EMagicElement Element) const
 {
 	return ElementalOpposites.Contains(Element);
 }
@@ -83,8 +83,8 @@ bool UDamageCalculationComponent::HasOppositeElement(EMagicType Element) const
 
 FDamageCalculationResult UDamageCalculationComponent::CalculateDamage(
 	float BaseDamage,
-	EMagicType AttackElement,
-	EMagicType DefenderElement,
+	EMagicElement AttackElement,
+	EMagicElement DefenderElement,
 	int32 AttackerLevel,
 	int32 AttackerWisdom,
 	bool bIsDualElement) const
@@ -114,8 +114,8 @@ FDamageCalculationResult UDamageCalculationComponent::CalculateDamage(
 
 float UDamageCalculationComponent::CalculateSimpleDamage(
 	float BaseDamage,
-	EMagicType AttackElement,
-	EMagicType DefenderElement) const
+	EMagicElement AttackElement,
+	EMagicElement DefenderElement) const
 {
 	float ElementalMultiplier = GetElementalMultiplier(AttackElement, DefenderElement, false);
 	return BaseDamage * ElementalMultiplier;
@@ -139,7 +139,7 @@ float UDamageCalculationComponent::GetWisdomScalingMultiplier(int32 Wisdom) cons
 	return 1.0f + (Wisdom * WisdomScalingFactor);
 }
 
-float UDamageCalculationComponent::GetElementalMultiplier(EMagicType AttackElement, EMagicType DefenderElement, bool bIsDualElement) const
+float UDamageCalculationComponent::GetElementalMultiplier(EMagicElement AttackElement, EMagicElement DefenderElement, bool bIsDualElement) const
 {
 	// Dual element attacks ignore weaknesses per design
 	if (bIsDualElement && bDualElementIgnoresWeakness)

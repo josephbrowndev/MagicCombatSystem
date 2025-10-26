@@ -70,13 +70,13 @@ public:
 	// ============================================
 
 	UFUNCTION(BlueprintCallable, Category = "Damage|Elements")
-	bool IsElementWeakTo(EMagicType AttackElement, EMagicType DefenderElement) const;
+	bool IsElementWeakTo(EMagicElement AttackElement, EMagicElement DefenderElement) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Damage|Elements")
-	EMagicType GetOppositeElement(EMagicType Element) const;
+	EMagicElement GetOppositeElement(EMagicElement Element) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Damage|Elements")
-	bool HasOppositeElement(EMagicType Element) const;
+	bool HasOppositeElement(EMagicElement Element) const;
 
 	// ============================================
 	// Damage Calculation
@@ -85,8 +85,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 	FDamageCalculationResult CalculateDamage(
 		float BaseDamage,
-		EMagicType AttackElement,
-		EMagicType DefenderElement,
+		EMagicElement AttackElement,
+		EMagicElement DefenderElement,
 		int32 AttackerLevel,
 		int32 AttackerWisdom,
 		bool bIsDualElement = false
@@ -95,8 +95,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Damage")
 	float CalculateSimpleDamage(
 		float BaseDamage,
-		EMagicType AttackElement,
-		EMagicType DefenderElement
+		EMagicElement AttackElement,
+		EMagicElement DefenderElement
 	) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Damage")
@@ -106,7 +106,7 @@ public:
 	float GetWisdomScalingMultiplier(int32 Wisdom) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Damage")
-	float GetElementalMultiplier(EMagicType AttackElement, EMagicType DefenderElement, bool bIsDualElement) const;
+	float GetElementalMultiplier(EMagicElement AttackElement, EMagicElement DefenderElement, bool bIsDualElement) const;
 
 	// ============================================
 	// Utility Functions
@@ -127,7 +127,7 @@ protected:
 	// ============================================
 
 	// Maps elements to their opposites for weakness calculation
-	TMap<EMagicType, EMagicType> ElementalOpposites;
+	TMap<EMagicElement, EMagicElement> ElementalOpposites;
 
 	void InitializeElementalOpposites();
 };
