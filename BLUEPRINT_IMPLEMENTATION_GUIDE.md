@@ -48,15 +48,16 @@
 
 2. **Open** `BP_NinjaWizardCharacter`
 
-### Step 2: Add All Components
+### Step 2: Verify All Components Are Auto-Created
 
-In the Components panel, click "Add Component" and add these **11 components**:
+**All components are automatically created in C++!** Open your character Blueprint and verify these **12 components** exist in the Components panel:
 
 ```
 ✅ Magic Component
 ✅ Weapon Component
-✅ Attribute Component
-✅ Soul Bond Component
+✅ Mastery Manager
+✅ Attribute Component (as PlayerAttributeComponent)
+✅ Summon Manager (handles soul bonding - no separate SoulBondComponent needed!)
 ✅ Skill Tree Component
 ✅ Inventory Component
 ✅ Damage Calculation Component
@@ -66,7 +67,7 @@ In the Components panel, click "Add Component" and add these **11 components**:
 ✅ Weapon Return Component
 ```
 
-**Pro Tip**: Use the search box to quickly find each component!
+**Important**: You do NOT need to add these manually! They're created in the C++ constructor and will appear automatically. Just configure them!
 
 ### Step 3: Component Configuration
 
@@ -692,7 +693,7 @@ World Settings:
 
 #### **Character Setup** (10 minutes)
 - [ ] PIE (Play in Editor)
-- [ ] Press Tab, verify all 11 components appear in debug
+- [ ] Press Tab, verify all 12 components appear in debug
 - [ ] Move with WASD, jump with Space
 - [ ] Open console, type `showdebug` to see component status
 
@@ -893,7 +894,7 @@ Event: ActorEndOverlap (Safe Zone Volume)
 ## Final Checklist
 
 ### Pre-Launch Setup
-- [ ] All 11 components added to character
+- [ ] All 12 components verified in character (auto-created from C++)
 - [ ] Enhanced Input configured with 30+ actions
 - [ ] All input actions bound in Event Graph
 - [ ] Health bar widget created and working
@@ -924,7 +925,7 @@ Event: ActorEndOverlap (Safe Zone Volume)
 Your ninja wizard combat game is now fully set up in Blueprint!
 
 **What you accomplished**:
-✅ Complete character with 11 combat components
+✅ Complete character with 12 auto-created components
 ✅ 30+ input actions configured
 ✅ 5+ UI widgets created
 ✅ Enemy AI with 5 behavior types
