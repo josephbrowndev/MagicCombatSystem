@@ -193,8 +193,8 @@ public:
 	void ExecuteThrow();
 
 	// Magic
-	void CastSpell(EMagicType Element);
-	void CastDualSpell(EMagicType Element1, EMagicType Element2);
+	void CastSpell(EMagicElement Element);
+	void CastDualSpell(EMagicElement Element1, EMagicElement Element2);
 
 	// Weapon
 	void PerformWeaponAttack();
@@ -474,7 +474,7 @@ IA_RecallWeapon (Triggered)
 When player attacks an enemy, use the damage calculation system:
 
 ```cpp
-void ANinjaWizardCharacter::DealDamageToEnemy(ACombatEntity* Enemy, float BaseDamage, EMagicType AttackElement)
+void ANinjaWizardCharacter::DealDamageToEnemy(ACombatEntity* Enemy, float BaseDamage, EMagicElement AttackElement)
 {
 	if (!Enemy || !DamageCalculationComponent || !AttributeComponent) return;
 
@@ -483,7 +483,7 @@ void ANinjaWizardCharacter::DealDamageToEnemy(ACombatEntity* Enemy, float BaseDa
 	int32 PlayerWisdom = AttributeComponent->GetAttribute(EAttribute::Wisdom);
 
 	// Get enemy's element (you'll need to add this to CombatEntity)
-	EMagicType EnemyElement = EMagicType::Fire; // Get from enemy
+	EMagicElement EnemyElement = EMagicElement::Fire; // Get from enemy
 
 	// Check if this is a dual element attack
 	bool bIsDualElement = false; // Set based on your spell system
