@@ -18,6 +18,13 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class IInteractableInterface;
+class UDamageCalculationComponent;
+class UCombatMovementComponent;
+class UGrappleComponent;
+class UHealingComponent;
+class UWeaponReturnComponent;
+class USkillTreeComponent;
+class UInventoryComponent;
 
 UCLASS()
 class ELEMENTALDANGER_API ANinjaWizardCharacter : public ACharacter
@@ -80,6 +87,29 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USummonManagerComponent* SummonManager;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UDamageCalculationComponent* DamageCalculationComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UCombatMovementComponent* CombatMovementComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UGrappleComponent* GrappleComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UHealingComponent* HealingComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UWeaponReturnComponent* WeaponReturnComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USkillTreeComponent* SkillTreeComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UInventoryComponent* InventoryComponent;
+
+	// Note: Soul bonding is handled by SummonManager component
 
 	// ============================================
 	// Resource Functions

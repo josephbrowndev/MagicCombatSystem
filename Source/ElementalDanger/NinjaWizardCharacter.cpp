@@ -6,6 +6,13 @@
 #include "MasteryManagerComponent.h"
 #include "PlayerAttributeComponent.h"
 #include "SummonManagerComponent.h"
+#include "DamageCalculationComponent.h"
+#include "CombatMovementComponent.h"
+#include "GrappleComponent.h"
+#include "HealingComponent.h"
+#include "WeaponReturnComponent.h"
+#include "SkillTreeComponent.h"
+#include "InventoryComponent.h"
 #include "InteractableInterface.h"
 #include "NinjaWizardHUD.h"
 #include "Components/CapsuleComponent.h"
@@ -73,6 +80,19 @@ ANinjaWizardCharacter::ANinjaWizardCharacter()
 	MasteryManager = CreateDefaultSubobject<UMasteryManagerComponent>(TEXT("MasteryManager"));
 	AttributeComponent = CreateDefaultSubobject<UPlayerAttributeComponent>(TEXT("AttributeComponent"));
 	SummonManager = CreateDefaultSubobject<USummonManagerComponent>(TEXT("SummonManager"));
+
+	// Create combat components
+	DamageCalculationComponent = CreateDefaultSubobject<UDamageCalculationComponent>(TEXT("DamageCalculationComponent"));
+	CombatMovementComponent = CreateDefaultSubobject<UCombatMovementComponent>(TEXT("CombatMovementComponent"));
+	GrappleComponent = CreateDefaultSubobject<UGrappleComponent>(TEXT("GrappleComponent"));
+	HealingComponent = CreateDefaultSubobject<UHealingComponent>(TEXT("HealingComponent"));
+	WeaponReturnComponent = CreateDefaultSubobject<UWeaponReturnComponent>(TEXT("WeaponReturnComponent"));
+
+	// Create progression components
+	SkillTreeComponent = CreateDefaultSubobject<USkillTreeComponent>(TEXT("SkillTreeComponent"));
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+
+	// Note: Soul bonding is handled by SummonManager component (already created above)
 }
 
 void ANinjaWizardCharacter::BeginPlay()
