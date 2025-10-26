@@ -30,7 +30,7 @@ UGrappleComponent::UGrappleComponent()
 
 	bShowGrappleLine = true;
 	GrappleLineColor = FLinearColor::Yellow;
-	GrappleElement = EMagicType::Lightning;
+	GrappleElement = EMagicElement::Lightning;
 }
 
 void UGrappleComponent::BeginPlay()

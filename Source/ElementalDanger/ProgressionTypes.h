@@ -247,6 +247,9 @@ struct FItemData
 	int32 Value = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	bool bIsStackable = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bIsQuestItem = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
@@ -356,6 +359,9 @@ struct FPotionData : public FItemData
 	float HealthRestore = 50.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Potion")
+	float HealAmount = 50.0f; // Alias for HealthRestore for compatibility
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Potion")
 	float ManaRestore = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Potion")
@@ -391,43 +397,32 @@ struct FEquipmentLoadout
 {
 	GENERATED_BODY()
 
-	// Weapons (4 slots for quick swap)
+	// Weapons (4 slots for quick swap) - using fixed size arrays
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapons")
-	FWeaponData PrimaryWeapon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapons")
-	FWeaponData SecondaryWeapon;
+	FWeaponData EquippedWeapons[4];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapons")
-	FWeaponData TertiaryWeapon;
+	bool bWeaponSlotFilled[4];
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapons")
-	FWeaponData QuaternaryWeapon;
-
-	// Armor
+	// Armor (8 slots) - using fixed size arrays
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	FArmorData Head;
+	FArmorData EquippedArmor[8];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	FArmorData Chest;
+	bool bArmorSlotFilled[8];
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	FArmorData Legs;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	FArmorData Hands;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	FArmorData Feet;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	FArmorData Accessory1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	FArmorData Accessory2;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	FArmorData Cloak;
+	FEquipmentLoadout()
+	{
+		// Initialize arrays
+		for (int32 i = 0; i < 4; i++)
+		{
+			bWeaponSlotFilled[i] = false;
+		}
+		for (int32 i = 0; i < 8; i++)
+		{
+			bArmorSlotFilled[i] = false;
+		}
+	}
 
 	// Calculated stats from equipment
 	UPROPERTY(BlueprintReadOnly, Category = "Equipment|Stats")
