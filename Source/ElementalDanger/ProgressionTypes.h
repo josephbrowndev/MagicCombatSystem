@@ -397,31 +397,32 @@ struct FEquipmentLoadout
 {
 	GENERATED_BODY()
 
-	// Weapons (4 slots for quick swap) - using fixed size arrays
+	// Weapons (4 slots for quick swap) - using TArray for Blueprint compatibility
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapons")
-	FWeaponData EquippedWeapons[4];
+	TArray<FWeaponData> EquippedWeapons;
 
+	// Using uint8 instead of bool array (UHT doesn't support bool arrays)
+	// 0 = false, 1 = true
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapons")
-	bool bWeaponSlotFilled[4];
+	TArray<uint8> bWeaponSlotFilled;
 
-	// Armor (8 slots) - using fixed size arrays
+	// Armor (8 slots) - using TArray for Blueprint compatibility
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	FArmorData EquippedArmor[8];
+	TArray<FArmorData> EquippedArmor;
 
+	// Using uint8 instead of bool array (UHT doesn't support bool arrays)
+	// 0 = false, 1 = true
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Armor")
-	bool bArmorSlotFilled[8];
+	TArray<uint8> bArmorSlotFilled;
 
 	FEquipmentLoadout()
 	{
-		// Initialize arrays
-		for (int32 i = 0; i < 4; i++)
-		{
-			bWeaponSlotFilled[i] = false;
-		}
-		for (int32 i = 0; i < 8; i++)
-		{
-			bArmorSlotFilled[i] = false;
-		}
+		// Initialize arrays with fixed sizes
+		EquippedWeapons.SetNum(4);
+		bWeaponSlotFilled.Init(0, 4);
+
+		EquippedArmor.SetNum(8);
+		bArmorSlotFilled.Init(0, 8);
 	}
 
 	// Calculated stats from equipment
