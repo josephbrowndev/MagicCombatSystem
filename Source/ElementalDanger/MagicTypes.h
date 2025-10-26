@@ -23,6 +23,9 @@ enum class EMagicElement : uint8
 	None        UMETA(DisplayName = "None")
 };
 
+// Type alias for compatibility
+typedef EMagicElement EMagicType;
+
 /**
  * Combined/Fusion magic types
  */

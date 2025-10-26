@@ -105,10 +105,10 @@ public:
 	// Tree Query Functions
 	// ============================================
 
-	UFUNCTION(BlueprintCallable, Category = "Skill Tree")
+	// C++ only - returns pointer to skill tree data
 	FSkillTreeData* GetSkillTree(ESkillTreeType TreeType);
 
-	UFUNCTION(BlueprintCallable, Category = "Skill Tree")
+	// C++ only - returns pointer to skill node data
 	FSkillNodeData* GetSkillNode(ESkillTreeType TreeType, FName NodeID);
 
 	UFUNCTION(BlueprintCallable, Category = "Skill Tree")

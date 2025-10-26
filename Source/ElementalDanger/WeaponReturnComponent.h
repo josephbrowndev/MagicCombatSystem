@@ -134,7 +134,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Return|Query")
 	TArray<FName> GetThrownWeaponIDs() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon Return|Query")
+	// C++ only - returns pointer to thrown weapon data
 	FThrownWeaponData* GetThrownWeaponData(FName WeaponID);
 
 	// ============================================
