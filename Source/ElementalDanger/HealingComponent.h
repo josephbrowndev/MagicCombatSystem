@@ -37,9 +37,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Healing|Config")
 	float ClericHealRate = 10.0f; // HP per second from cleric
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Healing|Config")
+	float OutOfCombatRegenRate = 2.0f; // HP per second when out of combat
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Healing|Config")
+	float OutOfCombatDelay = 8.0f; // Seconds after combat before regen starts
+
 	// ============================================
 	// Current Healing State
 	// ============================================
+
+	UPROPERTY(BlueprintReadOnly, Category = "Healing|State")
+	bool bIsInCombat = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Healing|State")
+	float TimeSinceLastCombat = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Healing|State")
 	bool bIsInSafeZone = false;
@@ -93,6 +105,22 @@ public:
 	bool IsBeingHealedByCleric() const { return bIsBeingHealedByCleric; }
 
 	// ============================================
+	// Combat State Management
+	// ============================================
+
+	UFUNCTION(BlueprintCallable, Category = "Healing|Combat")
+	void EnterCombat();
+
+	UFUNCTION(BlueprintCallable, Category = "Healing|Combat")
+	void ExitCombat();
+
+	UFUNCTION(BlueprintCallable, Category = "Healing|Combat")
+	bool IsInCombat() const { return bIsInCombat; }
+
+	UFUNCTION(BlueprintCallable, Category = "Healing|Combat")
+	bool CanStartOutOfCombatRegen() const;
+
+	// ============================================
 	// Healing Validation
 	// ============================================
 
@@ -127,6 +155,15 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Healing|Events")
 	void OnClericHealingStopped();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Healing|Events")
+	void OnOutOfCombatRegenStarted();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Healing|Events")
+	void OnOutOfCombatRegenStopped();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Healing|Events")
+	void OnCombatStateChanged(bool bInCombat);
+
 protected:
 	// ============================================
 	// Internal Healing Logic
@@ -134,6 +171,7 @@ protected:
 
 	void ProcessSafeZoneHealing(float DeltaTime);
 	void ProcessClericHealing(float DeltaTime);
+	void ProcessOutOfCombatRegen(float DeltaTime);
 
 	// ============================================
 	// References

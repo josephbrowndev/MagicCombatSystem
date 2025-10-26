@@ -19,9 +19,13 @@ UHealingComponent::UHealingComponent()
 
 	SafeZoneHealRate = 5.0f;
 	ClericHealRate = 10.0f;
+	OutOfCombatRegenRate = 2.0f;
+	OutOfCombatDelay = 8.0f;
 
 	bIsInSafeZone = false;
 	bIsBeingHealedByCleric = false;
+	bIsInCombat = false;
+	TimeSinceLastCombat = 0.0f;
 	CurrentClericHealer = nullptr;
 	CurrentSafeZone = nullptr;
 }
@@ -41,6 +45,12 @@ void UHealingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	// Track time since last combat
+	if (!bIsInCombat)
+	{
+		TimeSinceLastCombat += DeltaTime;
+	}
+
 	// Process safe zone healing
 	if (bIsInSafeZone)
 	{
@@ -53,7 +63,11 @@ void UHealingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		ProcessClericHealing(DeltaTime);
 	}
 
-	// NOTE: NO natural regeneration! This is intentional per design.
+	// Process out-of-combat regeneration
+	if (CanStartOutOfCombatRegen())
+	{
+		ProcessOutOfCombatRegen(DeltaTime);
+	}
 }
 
 // ============================================
@@ -220,6 +234,65 @@ void UHealingComponent::ProcessClericHealing(float DeltaTime)
 	// Determine if this is NPC or summon cleric
 	// For now, we'll use ClericNPC - you can add logic to distinguish
 	ApplyHealing(HealAmount, EHealingSource::ClericNPC);
+}
+
+// ============================================
+// Combat State Management
+// ============================================
+
+void UHealingComponent::EnterCombat()
+{
+	if (bIsInCombat) return;
+
+	bIsInCombat = true;
+	TimeSinceLastCombat = 0.0f;
+
+	OnCombatStateChanged(true);
+
+	UE_LOG(LogTemp, Log, TEXT("Entered combat - regeneration stopped"));
+}
+
+void UHealingComponent::ExitCombat()
+{
+	if (!bIsInCombat) return;
+
+	bIsInCombat = false;
+	TimeSinceLastCombat = 0.0f;
+
+	OnCombatStateChanged(false);
+
+	UE_LOG(LogTemp, Log, TEXT("Exited combat - regeneration will start in %.1f seconds"), OutOfCombatDelay);
+}
+
+bool UHealingComponent::CanStartOutOfCombatRegen() const
+{
+	if (bIsInCombat) return false;
+	if (TimeSinceLastCombat < OutOfCombatDelay) return false;
+	if (GetCurrentHealthPercent() >= 1.0f) return false;
+
+	return true;
+}
+
+void UHealingComponent::ProcessOutOfCombatRegen(float DeltaTime)
+{
+	static bool bRegenStarted = false;
+
+	if (!bRegenStarted)
+	{
+		bRegenStarted = true;
+		OnOutOfCombatRegenStarted();
+		UE_LOG(LogTemp, Log, TEXT("Out-of-combat regeneration started"));
+	}
+
+	float HealAmount = OutOfCombatRegenRate * DeltaTime;
+	HealCharacter(HealAmount);
+
+	// If we reach full health, stop regen visually
+	if (GetCurrentHealthPercent() >= 1.0f)
+	{
+		bRegenStarted = false;
+		OnOutOfCombatRegenStopped();
+	}
 }
 
 // ============================================
