@@ -296,6 +296,9 @@ struct FWeaponData : public FItemData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	bool bCanReturn = false; // For "Return" skill
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	TMap<FName, int32> StatModifiers; // Generic stat modifiers (e.g., "Strength" -> +5)
+
 	FWeaponData()
 	{
 		ItemType = EItemType::Weapon;
@@ -320,6 +323,9 @@ struct FArmorData : public FItemData
 	float Defense = 10.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Armor")
+	float DefenseValue = 10.0f; // Alias for Defense for compatibility
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Armor")
 	float MagicResistance = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Armor")
@@ -337,11 +343,15 @@ struct FArmorData : public FItemData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Armor")
 	TArray<FName> SetBonusID; // For armor sets
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Armor")
+	TMap<FName, int32> StatModifiers; // Generic stat modifiers (e.g., "Strength" -> +5)
+
 	FArmorData()
 	{
 		ItemType = EItemType::Armor;
 		ArmorSlot = EArmorSlot::Chest;
 		Defense = 10.0f;
+		DefenseValue = 10.0f;
 		MagicResistance = 0.0f;
 		StrengthBonus = 0;
 		WisdomBonus = 0;
