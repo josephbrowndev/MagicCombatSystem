@@ -69,7 +69,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	int32 GetItemQuantity(FName ItemID) const;
 
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	// C++ only - returns pointer to item data
 	FItemData* GetItemByID(FName ItemID);
 
 	// ============================================
@@ -88,10 +88,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
 	bool UnequipArmor(EArmorSlot ArmorSlot);
 
-	UFUNCTION(BlueprintCallable, Category = "Equipment")
+	// C++ only - returns pointer to equipped weapon
 	FWeaponData* GetEquippedWeapon(int32 SlotIndex);
 
-	UFUNCTION(BlueprintCallable, Category = "Equipment")
+	// C++ only - returns pointer to equipped armor
 	FArmorData* GetEquippedArmor(EArmorSlot ArmorSlot);
 
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
@@ -110,7 +110,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Equipment|Weapons")
 	int32 GetCurrentWeaponSlot() const { return CurrentWeaponSlot; }
 
-	UFUNCTION(BlueprintCallable, Category = "Equipment|Weapons")
+	// C++ only - returns pointer to current weapon
 	FWeaponData* GetCurrentWeapon();
 
 	// ============================================
@@ -169,6 +169,14 @@ public:
 	void SortInventoryByType();
 
 	// ============================================
+	// C++ Helper Functions (Public for component access)
+	// ============================================
+
+	FWeaponData* FindWeaponByID(FName WeaponID);
+	FArmorData* FindArmorByID(FName ArmorID);
+	FPotionData* FindPotionByID(FName PotionID);
+
+	// ============================================
 	// Events
 	// ============================================
 
@@ -200,10 +208,6 @@ protected:
 	// ============================================
 	// Internal Helper Functions
 	// ============================================
-
-	FWeaponData* FindWeaponByID(FName WeaponID);
-	FArmorData* FindArmorByID(FName ArmorID);
-	FPotionData* FindPotionByID(FName PotionID);
 
 	void UpdateEquipmentStats();
 
