@@ -145,7 +145,7 @@ public:
 	FLinearColor GrappleLineColor = FLinearColor::Yellow;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grapple|Visual")
-	EMagicType GrappleElement = EMagicType::Lightning; // Visual element effect
+	EMagicElement GrappleElement = EMagicElement::Lightning; // Visual element effect
 
 	// ============================================
 	// Grapple Shooting
