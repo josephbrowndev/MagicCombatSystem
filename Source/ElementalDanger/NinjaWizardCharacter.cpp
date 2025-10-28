@@ -45,6 +45,13 @@ ANinjaWizardCharacter::ANinjaWizardCharacter()
 	MouseSensitivity = 1.0f;
 	bInvertCameraY = false;
 
+	// Health
+	MaxHealth = 100.0f;
+	CurrentHealth = MaxHealth;
+
+	// Magic
+	CurrentlySelectedElement = EMagicElement::Fire;
+
 	// Interaction settings
 	InteractionRange = 300.0f;
 	InteractionCheckFrequency = 0.1f;
@@ -430,5 +437,106 @@ void ANinjaWizardCharacter::EquipWeapon(EWeaponStyle WeaponStyle)
 	if (WeaponComponent)
 	{
 		WeaponComponent->EquipWeapon(WeaponStyle);
+	}
+}
+
+// ============================================
+// Health System
+// ============================================
+
+void ANinjaWizardCharacter::TakeDamageFrom(float Damage, AActor* DamageDealer)
+{
+	if (IsDead()) return;
+
+	// Check if blocking
+	if (CombatMovementComponent && CombatMovementComponent->IsBlocking())
+	{
+		// Apply block reduction
+		Damage *= (1.0f - CombatMovementComponent->GetBlockDamageReduction());
+		UE_LOG(LogTemp, Log, TEXT("Blocked! Reduced damage to: %.1f"), Damage);
+	}
+
+	// Check if in dodge i-frames
+	if (CombatMovementComponent && CombatMovementComponent->IsInvulnerable())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Dodged! No damage taken"));
+		return;
+	}
+
+	CurrentHealth = FMath::Max(0.0f, CurrentHealth - Damage);
+
+	// Enter combat state
+	if (HealingComponent)
+	{
+		HealingComponent->EnterCombat();
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Player took %.1f damage! Health: %.1f / %.1f"), Damage, CurrentHealth, MaxHealth);
+
+	if (IsDead())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Player died!"));
+		// Handle death - can be overridden in Blueprint
+	}
+}
+
+void ANinjaWizardCharacter::Heal(float Amount)
+{
+	if (IsDead()) return;
+
+	CurrentHealth = FMath::Min(MaxHealth, CurrentHealth + Amount);
+	UE_LOG(LogTemp, Log, TEXT("Player healed %.1f HP! Health: %.1f / %.1f"), Amount, CurrentHealth, MaxHealth);
+}
+
+// ============================================
+// Magic System
+// ============================================
+
+void ANinjaWizardCharacter::SetSelectedElement(EMagicElement Element)
+{
+	CurrentlySelectedElement = Element;
+	OnElementSelected(Element);  // Blueprint event
+	UE_LOG(LogTemp, Log, TEXT("Selected element: %d"), (int32)Element);
+}
+
+void ANinjaWizardCharacter::CastSelectedElement()
+{
+	if (!MagicComponent) return;
+
+	// Check if we have a projectile class set
+	if (!MagicProjectileClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No MagicProjectileClass set! Set it in Blueprint."));
+		return;
+	}
+
+	// Get spell data for the selected element
+	// This is a simplified version - you can expand it
+	FSpellData SpellData;
+	SpellData.Element = CurrentlySelectedElement;
+	SpellData.ManaCost = 20.0f;
+	SpellData.BaseDamage = 50.0f;
+	SpellData.CastTime = 0.5f;
+
+	// Check mana
+	if (!ConsumeMana(SpellData.ManaCost))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not enough mana to cast!"));
+		return;
+	}
+
+	// Spawn projectile
+	FVector SpawnLocation = GetActorLocation() + (GetActorForwardVector() * 100.0f) + FVector(0, 0, 50.0f);
+	FRotator SpawnRotation = GetControlRotation();
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = this;
+
+	AActor* Projectile = GetWorld()->SpawnActor<AActor>(MagicProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+
+	if (Projectile)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Cast %d element spell!"), (int32)CurrentlySelectedElement);
 	}
 }

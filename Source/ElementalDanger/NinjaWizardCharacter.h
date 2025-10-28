@@ -134,6 +134,50 @@ public:
 	float GetStaminaPercentage() const;
 
 	// ============================================
+	// Health System
+	// ============================================
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float MaxHealth = 100.0f;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	float CurrentHealth = 100.0f;
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void TakeDamageFrom(float Damage, AActor* DamageDealer);
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void Heal(float Amount);
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	float GetHealthPercent() const { return MaxHealth > 0 ? CurrentHealth / MaxHealth : 0.0f; }
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	bool IsDead() const { return CurrentHealth <= 0.0f; }
+
+	// ============================================
+	// Magic System
+	// ============================================
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Magic")
+	EMagicElement CurrentlySelectedElement = EMagicElement::Fire;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Magic|Projectile")
+	TSubclassOf<AActor> MagicProjectileClass;
+
+	UFUNCTION(BlueprintCallable, Category = "Magic")
+	void SetSelectedElement(EMagicElement Element);
+
+	UFUNCTION(BlueprintCallable, Category = "Magic")
+	EMagicElement GetSelectedElement() const { return CurrentlySelectedElement; }
+
+	UFUNCTION(BlueprintCallable, Category = "Magic")
+	void CastSelectedElement();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Magic")
+	void OnElementSelected(EMagicElement Element);
+
+	// ============================================
 	// Combat Functions
 	// ============================================
 
