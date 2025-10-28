@@ -448,19 +448,19 @@ void ANinjaWizardCharacter::TakeDamageFrom(float Damage, AActor* DamageDealer)
 {
 	if (IsDead()) return;
 
-	// Check if blocking
-	if (CombatMovementComponent && CombatMovementComponent->IsBlocking())
-	{
-		// Apply block reduction
-		Damage *= (1.0f - CombatMovementComponent->GetBlockDamageReduction());
-		UE_LOG(LogTemp, Log, TEXT("Blocked! Reduced damage to: %.1f"), Damage);
-	}
-
-	// Check if in dodge i-frames
-	if (CombatMovementComponent && CombatMovementComponent->IsInvulnerable())
+	// Check if in dodge i-frames first
+	if (CombatMovementComponent && CombatMovementComponent->HasDodgeInvulnerability())
 	{
 		UE_LOG(LogTemp, Log, TEXT("Dodged! No damage taken"));
 		return;
+	}
+
+	// Check if blocking - use the component's damage calculation
+	if (CombatMovementComponent && CombatMovementComponent->IsBlocking())
+	{
+		// Component will calculate blocked damage (handles physical vs magic)
+		Damage = CombatMovementComponent->CalculateBlockedDamage(Damage, false);
+		UE_LOG(LogTemp, Log, TEXT("Blocked! Reduced damage to: %.1f"), Damage);
 	}
 
 	CurrentHealth = FMath::Max(0.0f, CurrentHealth - Damage);
